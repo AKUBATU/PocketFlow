@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563eb">
+  <title>PocketFlow</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div id="toast" class="toast hidden"></div>
+
+  <main id="auth-screen" class="auth-shell">
+    <section class="auth-card">
+      <div class="brand-lockup">
+        <div class="brand-icon">PF</div>
+        <div>
+          <h1>PocketFlow</h1>
+          <p>Foto dulu, catat kemudian.</p>
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="login-tab" class="active" type="button">Login</button>
+        <button id="register-tab" type="button">Register</button>
+      </div>
+
+      <form id="login-form" class="form-stack">
+        <label>Email
+          <input type="email" id="login-email" placeholder="email@example.com" required>
+        </label>
+        <label>Password
+          <input type="password" id="login-password" placeholder="Minimal 6 karakter" required>
+        </label>
+        <button class="primary-btn" type="submit">Masuk</button>
+      </form>
+
+      <form id="register-form" class="form-stack hidden">
+        <label>Nama
+          <input type="text" id="register-name" placeholder="Nama kamu" required>
+        </label>
+        <label>Email
+          <input type="email" id="register-email" placeholder="email@example.com" required>
+        </label>
+        <label>Password
+          <input type="password" id="register-password" placeholder="Minimal 6 karakter" required>
+        </label>
+        <button class="primary-btn" type="submit">Buat Akun</button>
+      </form>
+    </section>
+  </main>
+
+  <main id="app-screen" class="app-shell hidden">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">PocketFlow</p>
+        <h2 id="page-title">Dashboard</h2>
+      </div>
+      <button id="refresh-btn" class="ghost-btn" type="button">Refresh</button>
+    </header>
+
+    <section id="home-page" class="page active-page">
+      <div class="balance-card">
+        <p>Saldo Saat Ini</p>
+        <h1 id="balance-value">Rp0</h1>
+        <span id="condition-badge">Mulai catat transaksi</span>
+      </div>
+
+      <div class="summary-grid">
+        <article class="summary-card income">
+          <span>Pemasukan Bulan Ini</span>
+          <strong id="income-value">Rp0</strong>
+        </article>
+        <article class="summary-card expense">
+          <span>Pengeluaran Bulan Ini</span>
+          <strong id="expense-value">Rp0</strong>
+        </article>
+        <article class="summary-card">
+          <span>Sisa Dana Bulan Ini</span>
+          <strong id="remaining-value">Rp0</strong>
+        </article>
+      </div>
+
+      <article class="info-card">
+        <h3 id="condition-title">Ringkasan Keuangan</h3>
+        <p id="condition-message">Tambahkan transaksi pertama kamu.</p>
+        <p id="top-category-text" class="muted"></p>
+      </article>
+
+      <div class="section-head">
+        <h3>Transaksi Terbaru</h3>
+      </div>
+      <div id="latest-list" class="transaction-list"></div>
+    </section>
+
+    <section id="add-page" class="page">
+      <div class="section-head">
+        <h3 id="form-title">Tambah Transaksi</h3>
+        <button id="reset-form-btn" class="ghost-btn" type="button">Reset</button>
+      </div>
+
+      <div class="ocr-card">
+        <label>Upload Bukti Transaksi / Struk
+          <input type="file" id="proof-image" accept="image/*">
+        </label>
+        <button id="ocr-btn" class="secondary-btn" type="button">Baca Foto dengan OCR</button>
+        <div id="ocr-status" class="muted small-text"></div>
+        <textarea id="ocr-text" placeholder="Hasil OCR akan muncul di sini. Kamu juga bisa paste teks bukti transaksi." rows="5"></textarea>
+        <button id="parse-text-btn" class="ghost-btn" type="button">Ambil Nominal/Tanggal dari Teks</button>
+      </div>
+
+      <form id="transaction-form" class="form-stack panel-form">
+        <input type="hidden" id="transaction-id">
+
+        <div class="segmented">
+          <label><input type="radio" name="tx-type" value="expense" checked> Pengeluaran</label>
+          <label><input type="radio" name="tx-type" value="income"> Pemasukan</label>
+        </div>
+
+        <label>Nominal
+          <input type="number" id="amount" placeholder="Contoh: 25000" min="1" step="1" required>
+        </label>
+
+        <label>Kategori
+          <select id="category-id"></select>
+        </label>
+
+        <label>Merchant / Sumber
+          <input type="text" id="merchant" placeholder="Contoh: Indomaret, Transfer BCA">
+        </label>
+
+        <div class="two-col">
+          <label>Tanggal
+            <input type="date" id="transaction-date" required>
+          </label>
+          <label>Waktu
+            <input type="time" id="transaction-time">
+          </label>
+        </div>
+
+        <label>Catatan
+          <textarea id="note" rows="3" placeholder="Catatan opsional"></textarea>
+        </label>
+
+        <button class="primary-btn" type="submit">Simpan Transaksi</button>
+      </form>
+    </section>
+
+    <section id="history-page" class="page">
+      <div class="filters-card">
+        <select id="filter-type">
+          <option value="">Semua Tipe</option>
+          <option value="expense">Pengeluaran</option>
+          <option value="income">Pemasukan</option>
+        </select>
+        <input type="date" id="filter-from">
+        <input type="date" id="filter-to">
+        <input type="search" id="filter-q" placeholder="Cari merchant/catatan">
+        <button id="apply-filter-btn" class="secondary-btn" type="button">Filter</button>
+      </div>
+      <div id="history-list" class="transaction-list"></div>
+    </section>
+
+    <section id="profile-page" class="page">
+      <article class="info-card">
+        <h3 id="profile-name">User</h3>
+        <p id="profile-email" class="muted"></p>
+        <button id="logout-btn" class="danger-btn" type="button">Logout</button>
+      </article>
+
+      <article class="info-card">
+        <h3>Tambah Kategori</h3>
+        <form id="category-form" class="form-stack">
+          <label>Nama Kategori
+            <input id="new-category-name" type="text" placeholder="Contoh: Kopi" required>
+          </label>
+          <label>Tipe
+            <select id="new-category-type">
+              <option value="expense">Pengeluaran</option>
+              <option value="income">Pemasukan</option>
+            </select>
+          </label>
+          <button class="secondary-btn" type="submit">Tambah Kategori</button>
+        </form>
+      </article>
+
+      <article class="info-card">
+        <h3>Daftar Kategori</h3>
+        <div id="category-list" class="category-list"></div>
+      </article>
+    </section>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="home" type="button">Home</button>
+      <button class="nav-btn" data-page="add" type="button">Tambah</button>
+      <button class="nav-btn" data-page="history" type="button">Riwayat</button>
+      <button class="nav-btn" data-page="profile" type="button">Profil</button>
+    </nav>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
